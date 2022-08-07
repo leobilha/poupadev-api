@@ -12,9 +12,9 @@ namespace poupadev_api.Controllers
     public class ObjetivosFinanceirosController : ControllerBase
     {
         // Injeção de Dependencia 
-        private readonly PoupaDevContext _context;
+        private readonly PoupaDevDbContext _context;
 
-        public ObjetivosFinanceirosController(PoupaDevContext context)
+        public ObjetivosFinanceirosController(PoupaDevDbContext context)
         {
             _context = context;
         }
@@ -58,7 +58,7 @@ namespace poupadev_api.Controllers
         [HttpPost("{id}/operacoes")]
         public IActionResult PostOperacao(int id, OperacaoInputModel model)
         {
-            var operacao = new Operacao(model.Valor, model.TipoOperacao);
+            var operacao = new Operacao(model.Valor, model.TipoOperacao, id);
 
             var objetivo = _context.Objetivos.SingleOrDefault(o => o.Id == id);
 
