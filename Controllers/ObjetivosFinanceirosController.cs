@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PoupaDev.API.Controllers;
 using PoupaDev.API.Entities;
 using PoupaDev.API.Models;
@@ -24,7 +25,7 @@ namespace poupadev_api.Controllers
         [HttpGet]
         public IActionResult GetTodos()
         {
-            var objetivos = _context.Objetivos;
+            var objetivos = _context.Objetivos.Include(o => o.Operacoes);
             return Ok();
         }
 
@@ -32,7 +33,7 @@ namespace poupadev_api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPorId(int id)
         {
-            var objetivo = _context.Objetivos.SingleOrDefault(o => o.Id == id);
+            var objetivo = _context.Objetivos.Include(o => o.Operacoes).SingleOrDefault(o => o.Id == id);
 
             if (objetivo == null)
                 return NotFound();
@@ -47,6 +48,7 @@ namespace poupadev_api.Controllers
             var objetivo = new ObjetivoFinanceiro(model.Titulo, model.Descricao, model.ValorObjetivo);
 
             _context.Objetivos.Add(objetivo);
+            _context.SaveChanges();
 
             var id = objetivo.Id;
 
@@ -60,12 +62,14 @@ namespace poupadev_api.Controllers
         {
             var operacao = new Operacao(model.Valor, model.TipoOperacao, id);
 
-            var objetivo = _context.Objetivos.SingleOrDefault(o => o.Id == id);
+            var objetivo = _context.Objetivos.Include(o => o.Operacoes).SingleOrDefault(o => o.Id == id);
 
             if (objetivo == null)
                 return NotFound();
 
             objetivo.RealizarOperacaoFinanceira(operacao);
+
+            _context.SaveChanges();
 
             return NoContent();
         }

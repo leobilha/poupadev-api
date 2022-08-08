@@ -10,7 +10,7 @@ namespace PoupaDev.API.Entities
     {
         public Operacao(decimal valor, TipoOperacao tipo, int idObjetivo)
         {
-            Id = new Random().Next(1, 1000);
+            //Id = new Random().Next(1, 1000);
             Valor = valor;
             Tipo = tipo;
             IdObjetivo = idObjetivo;

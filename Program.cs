@@ -1,10 +1,20 @@
+using Microsoft.EntityFrameworkCore;
 using PoupaDev.API.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Injeção de Dependencia 
 // Add services to the container.
-builder.Services.AddSingleton<PoupaDevDbContext>();
+//builder.Services.AddSingleton<PoupaDevDbContext>();
+
+var connectionString = builder.Configuration.GetConnectionString("PoupaDevCs");
+//var connectionString = builder.Configuration.GetConnectionString("PoupaDevCs");
+
+// Db em produção
+builder.Services.AddDbContext<PoupaDevDbContext>(o => o.UseSqlServer(connectionString));
+
+//Para Teste em memoria
+//builder.Services.AddDbContext<PoupaDevDbContext>(o => o.UseInMemoryDatabase("PoupaDevDb"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
